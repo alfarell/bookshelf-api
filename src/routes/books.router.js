@@ -6,7 +6,7 @@ const booksRoute = [
   {
     method: 'GET',
     path: '/books',
-    handler: BooksController.show,
+    handler: (request, h) => BooksController.show(request, h),
     options: {
       validate: {
         ...BooksSchema.show,
@@ -17,12 +17,12 @@ const booksRoute = [
   {
     method: 'GET',
     path: '/books/{bookId}',
-    handler: BooksController.showById,
+    handler: (request, h) => BooksController.showById(request, h),
   },
   {
     method: 'POST',
     path: '/books',
-    handler: BooksController.create,
+    handler: (request, h) => BooksController.create(request, h),
     options: {
       validate: {
         ...BooksSchema.create,
@@ -33,7 +33,7 @@ const booksRoute = [
   {
     method: 'PUT',
     path: '/books/{bookId}',
-    handler: BooksController.update,
+    handler: (request, h) => BooksController.update(request, h),
     options: {
       validate: {
         ...BooksSchema.update,
@@ -44,7 +44,7 @@ const booksRoute = [
   {
     method: 'DELETE',
     path: '/books/{bookId}',
-    handler: BooksController.delete,
+    handler: (request, h) => BooksController.delete(request, h),
     options: {
       validate: {
         ...BooksSchema.delete,
