@@ -112,6 +112,23 @@ class BooksService {
       message: 'Buku berhasil diperbarui',
     };
   }
+
+  delete(bookId) {
+    const findIndex = this.#books.findIndex((item) => item.id === bookId);
+    if (findIndex === -1) {
+      return {
+        isSuccess: false,
+        message: 'Buku gagal dihapus. Id tidak ditemukan',
+      };
+    }
+
+    this.#books.splice(findIndex, 1);
+
+    return {
+      isSuccess: true,
+      message: 'Buku berhasil dihapus',
+    };
+  }
 }
 
 module.exports = BooksService;

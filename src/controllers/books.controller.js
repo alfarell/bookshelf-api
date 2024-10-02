@@ -83,6 +83,28 @@ class BooksController {
 
     return response;
   }
+
+  static delete(request, h) {
+    const { params } = request;
+
+    const updateBook = booksService.delete(params.bookId);
+
+    let createResponse;
+    if (updateBook.isSuccess) {
+      createResponse = new CreateResponse(
+        updateBook.message,
+        updateBook.data,
+      ).success();
+    } else {
+      createResponse = new CreateResponse(updateBook.message).failed();
+    }
+
+    const response = h
+      .response(createResponse.payload)
+      .code(createResponse.code);
+
+    return response;
+  }
 }
 
 class BooksSchema {
@@ -190,6 +212,17 @@ class BooksSchema {
         }),
       }),
       payload: Joi.object(this.basePayloadSchema('memperbarui')),
+    };
+  }
+
+  static get delete() {
+    return {
+      params: Joi.object({
+        bookId: Joi.string().min(1).not(':bookId').required().messages({
+          'string.empty': 'Buku gagal dihapus. Mohon isi params bookId',
+          'any.invalid': 'Buku gagal dihapus. Mohon isi params bookId',
+        }),
+      }),
     };
   }
 }

@@ -44,6 +44,17 @@ const booksRoute = [
       },
     },
   },
+  {
+    method: 'DELETE',
+    path: '/books/{bookId}',
+    handler: BooksController.delete,
+    options: {
+      validate: {
+        params: BooksSchema.delete.params,
+        failAction,
+      },
+    },
+  },
 ];
 
 module.exports = booksRoute;
