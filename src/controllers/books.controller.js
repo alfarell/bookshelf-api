@@ -45,13 +45,8 @@ class BooksController {
   }
 
   static _createResponse(handler, serviceData) {
-    const createRes = new CreateResponse(
-      serviceData?.message,
-      serviceData?.data,
-    );
-    const getResponse = serviceData.isSuccess
-      ? createRes.success()
-      : createRes.failed();
+    const createRes = new CreateResponse(serviceData);
+    const getResponse = createRes.getResponse();
 
     const responseHandler = handler
       .response(getResponse.payload)

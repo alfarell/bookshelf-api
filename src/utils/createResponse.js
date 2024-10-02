@@ -1,27 +1,19 @@
 class CreateResponse {
-  constructor(message, data) {
-    this.message = message;
-    this.data = data;
+  constructor(serviceData) {
+    this.message = serviceData.message;
+    this.data = serviceData.data;
+    this.code = serviceData?.success || serviceData?.failed;
+    this.status = serviceData?.success ? 'success' : 'fail';
   }
 
-  success() {
+  getResponse() {
     return {
       payload: {
-        status: 'success',
+        status: this.status,
         ...(this.message && { message: this.message }),
         ...(this.data && { data: this.data }),
       },
-      code: 200,
-    };
-  }
-
-  failed() {
-    return {
-      payload: {
-        status: 'fail',
-        ...(this.message && { message: this.message }),
-      },
-      code: 400,
+      code: this.code,
     };
   }
 }
