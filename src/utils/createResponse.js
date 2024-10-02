@@ -1,5 +1,5 @@
 class CreateResponse {
-  constructor(message, data = {}) {
+  constructor(message, data) {
     this.message = message;
     this.data = data;
   }
@@ -9,7 +9,7 @@ class CreateResponse {
       payload: {
         status: 'success',
         ...(this.message && { message: this.message }),
-        data: this.data,
+        ...(this.data && { data: this.data }),
       },
       code: 200,
     };
@@ -19,7 +19,7 @@ class CreateResponse {
     return {
       payload: {
         status: 'fail',
-        message: this.message,
+        ...(this.message && { message: this.message }),
       },
       code: 400,
     };
