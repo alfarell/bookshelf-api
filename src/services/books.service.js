@@ -4,32 +4,50 @@ const { nanoid } = require('nanoid');
 class BooksService {
   #books = booksData;
 
-  getAll(query) {
+  getAll(query = {}) {
+    const { name, reading, finished } = query;
     let books;
 
-    if (query?.name) {
-      books = this.#books.filter((item) => {
-        const itemName = item.name.toLowerCase();
-        const queryName = query.name.toLowerCase();
-
-        return itemName.includes(queryName);
-      });
-    } else if (query?.reading) {
-      books = this.#books.filter(
-        (item) => item.reading === !!Number(query?.reading),
-      );
-    } else if (query?.finished) {
-      books = this.#books.filter(
-        (item) => item.finished === !!Number(query?.finished),
-      );
+    if (typeof name === 'string') {
+      books = this._filterByName(name);
+    } else if (typeof reading === 'number') {
+      books = this._filterByReading(reading);
+    } else if (typeof finished === 'number') {
+      books = this._filterByFinished(finished);
     } else {
       books = this.#books;
     }
 
+    const formatData = books.map(({ id, name, publisher }) => ({
+      id,
+      name,
+      publisher,
+    }));
     return {
-      isSuccess: true,
-      data: books,
+      success: 200,
+      data: {
+        books: formatData,
+      },
     };
+  }
+
+  _filterByName(queryName) {
+    return this.#books.filter((item) => {
+      const itemName = item.name.toLowerCase();
+      const filterName = queryName.toLowerCase();
+
+      return itemName.includes(filterName);
+    });
+  }
+
+  _filterByReading(queryReading) {
+    const filterReading = !!queryReading;
+    return this.#books.filter((item) => item.reading === filterReading);
+  }
+
+  _filterByFinished(queryFinished) {
+    const filterFinished = !!queryFinished;
+    return this.#books.filter((item) => item.finished === filterFinished);
   }
 
   getById(bookId) {
@@ -37,14 +55,16 @@ class BooksService {
 
     if (!findBook) {
       return {
-        isSuccess: false,
+        failed: 404,
         message: 'Buku tidak ditemukan',
       };
     }
 
     return {
-      isSuccess: true,
-      data: findBook,
+      success: 200,
+      data: {
+        book: findBook,
+      },
     };
   }
 
@@ -53,7 +73,7 @@ class BooksService {
 
     if (readPage > pageCount) {
       return {
-        isSuccess: false,
+        failed: 400,
         message:
           'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
       };
@@ -75,9 +95,11 @@ class BooksService {
     this.#books.push(newData);
 
     return {
-      isSuccess: true,
+      success: 201,
       message: 'Buku berhasil ditambahkan',
-      data: newData,
+      data: {
+        bookId: newData.id,
+      },
     };
   }
 
@@ -86,7 +108,7 @@ class BooksService {
 
     if (readPage > pageCount) {
       return {
-        isSuccess: false,
+        failed: 400,
         message:
           'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
       };
@@ -95,7 +117,7 @@ class BooksService {
     const findIndex = this.#books.findIndex((item) => item.id === bookId);
     if (findIndex === -1) {
       return {
-        isSuccess: false,
+        failed: 404,
         message: 'Gagal memperbarui buku. Id tidak ditemukan',
       };
     }
@@ -108,7 +130,7 @@ class BooksService {
     };
 
     return {
-      isSuccess: true,
+      success: 200,
       message: 'Buku berhasil diperbarui',
     };
   }
@@ -117,7 +139,7 @@ class BooksService {
     const findIndex = this.#books.findIndex((item) => item.id === bookId);
     if (findIndex === -1) {
       return {
-        isSuccess: false,
+        failed: 404,
         message: 'Buku gagal dihapus. Id tidak ditemukan',
       };
     }
@@ -125,7 +147,7 @@ class BooksService {
     this.#books.splice(findIndex, 1);
 
     return {
-      isSuccess: true,
+      success: 200,
       message: 'Buku berhasil dihapus',
     };
   }
