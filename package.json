@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node ./src/server.js",
     "dev": "node ./src/server.js",
-    "lint": "prettier --write **/*.js && eslint --fix **/*.js",
-    "prepare": "husky"
+    "lint": "prettier --write **/*.js && eslint --fix **/*.js"
   },
   "author": "Alfarell Muchamad Yuwanto",
   "license": "ISC",
