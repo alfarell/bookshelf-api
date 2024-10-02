@@ -206,9 +206,9 @@ class BooksSchema {
   static get update() {
     return {
       params: Joi.object({
-        bookId: Joi.string().min(1).optional().messages({
-          'string.base': `Gagal memperbarui buku. Isi params bookId harus berupa huruf`,
+        bookId: Joi.string().min(1).not(':bookId').required().messages({
           'string.empty': `Gagal memperbarui buku. Mohon isi params bookId`,
+          'any.invalid': `Gagal memperbarui buku. Mohon isi params bookId`,
         }),
       }),
       payload: Joi.object(this.basePayloadSchema('memperbarui')),
