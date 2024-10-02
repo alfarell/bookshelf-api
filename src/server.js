@@ -13,6 +13,9 @@ const init = async () => {
         origin: ['*'],
       },
     },
+    router: {
+      stripTrailingSlash: true,
+    },
   });
 
   server.route(routes);
