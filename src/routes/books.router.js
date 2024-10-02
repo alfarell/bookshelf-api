@@ -1,7 +1,5 @@
-const {
-  BooksController,
-  BooksSchema,
-} = require('../controllers/books.controller');
+const BooksController = require('../controllers/books.controller');
+const BooksSchema = require('../schemas/books.schema');
 const failAction = require('../utils/failActionHandler');
 
 const booksRoute = [
@@ -11,7 +9,7 @@ const booksRoute = [
     handler: BooksController.show,
     options: {
       validate: {
-        query: BooksSchema.show,
+        ...BooksSchema.show,
         failAction,
       },
     },
@@ -27,7 +25,7 @@ const booksRoute = [
     handler: BooksController.create,
     options: {
       validate: {
-        payload: BooksSchema.create,
+        ...BooksSchema.create,
         failAction,
       },
     },
@@ -38,8 +36,7 @@ const booksRoute = [
     handler: BooksController.update,
     options: {
       validate: {
-        payload: BooksSchema.update.payload,
-        params: BooksSchema.update.params,
+        ...BooksSchema.update,
         failAction,
       },
     },
@@ -50,7 +47,7 @@ const booksRoute = [
     handler: BooksController.delete,
     options: {
       validate: {
-        params: BooksSchema.delete.params,
+        ...BooksSchema.delete,
         failAction,
       },
     },
