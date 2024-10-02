@@ -5,6 +5,19 @@ const CreateResponse = require('../utils/createResponse');
 const booksService = new BooksService();
 
 class BooksController {
+  static show(request, h) {
+    const { query } = request;
+
+    const getBooks = booksService.getAll(query);
+
+    const createResponse = new CreateResponse('', getBooks.data).success();
+    const response = h
+      .response(createResponse.payload)
+      .code(createResponse.code);
+
+    return response;
+  }
+
   static create(request, h) {
     const { payload } = request;
 
@@ -101,6 +114,23 @@ class BooksSchema {
     }, {});
 
     return schema;
+  }
+
+  static get show() {
+    return Joi.object({
+      name: Joi.string().min(1).optional().messages({
+        'string.base': `Gagal mendapatkan buku. Isi query nama buku harus berupa huruf`,
+        'string.empty': `Gagal mendapatkan buku. Mohon isi nama buku`,
+      }),
+      finished: Joi.number().integer().min(1).optional().messages({
+        'number.base': `Gagal mendapatkan buku. Isi query finished buku harus berupa angka 0 atau 1`,
+        'number.empty': `Gagal mendapatkan buku. Mohon isi finished buku`,
+      }),
+      reading: Joi.number().integer().min(1).optional().messages({
+        'number.base': `Gagal mendapatkan buku. Isi query reading buku harus berupa angka 0 atau 1`,
+        'number.empty': `Gagal mendapatkan buku. Mohon isi reading buku`,
+      }),
+    });
   }
 
   static get create() {

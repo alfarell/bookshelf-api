@@ -4,6 +4,34 @@ const { nanoid } = require('nanoid');
 class BooksService {
   #books = booksData;
 
+  getAll(query) {
+    let books;
+
+    if (query?.name) {
+      books = this.#books.filter((item) => {
+        const itemName = item.name.toLowerCase();
+        const queryName = query.name.toLowerCase();
+
+        return itemName.includes(queryName);
+      });
+    } else if (query?.reading) {
+      books = this.#books.filter(
+        (item) => item.reading === !!Number(query?.reading),
+      );
+    } else if (query?.finished) {
+      books = this.#books.filter(
+        (item) => item.finished === !!Number(query?.finished),
+      );
+    } else {
+      books = this.#books;
+    }
+
+    return {
+      isSuccess: true,
+      data: books,
+    };
+  }
+
   create(payload) {
     const { readPage, pageCount } = payload;
 

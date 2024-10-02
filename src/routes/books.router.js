@@ -8,8 +8,12 @@ const booksRoute = [
   {
     method: 'GET',
     path: '/books',
-    handler: () => {
-      return 'Book list';
+    handler: BooksController.show,
+    options: {
+      validate: {
+        query: BooksSchema.show,
+        failAction,
+      },
     },
   },
   {
