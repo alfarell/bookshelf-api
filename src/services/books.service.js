@@ -80,6 +80,38 @@ class BooksService {
       data: newData,
     };
   }
+
+  update(bookId, payload) {
+    const { readPage, pageCount } = payload;
+
+    if (readPage > pageCount) {
+      return {
+        isSuccess: false,
+        message:
+          'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
+      };
+    }
+
+    const findIndex = this.#books.findIndex((item) => item.id === bookId);
+    if (findIndex === -1) {
+      return {
+        isSuccess: false,
+        message: 'Gagal memperbarui buku. Id tidak ditemukan',
+      };
+    }
+
+    const updatedAt = new Date().toISOString();
+    this.#books[findIndex] = {
+      ...this.#books[findIndex],
+      ...payload,
+      updatedAt,
+    };
+
+    return {
+      isSuccess: true,
+      message: 'Buku berhasil diperbarui',
+    };
+  }
 }
 
 module.exports = BooksService;

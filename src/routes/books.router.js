@@ -32,6 +32,18 @@ const booksRoute = [
       },
     },
   },
+  {
+    method: 'PUT',
+    path: '/books/{bookId}',
+    handler: BooksController.update,
+    options: {
+      validate: {
+        payload: BooksSchema.update.payload,
+        params: BooksSchema.update.params,
+        failAction,
+      },
+    },
+  },
 ];
 
 module.exports = booksRoute;

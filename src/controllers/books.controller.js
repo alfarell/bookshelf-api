@@ -61,10 +61,32 @@ class BooksController {
 
     return response;
   }
+
+  static update(request, h) {
+    const { params, payload } = request;
+
+    const updateBook = booksService.update(params.bookId, payload);
+
+    let createResponse;
+    if (updateBook.isSuccess) {
+      createResponse = new CreateResponse(
+        updateBook.message,
+        updateBook.data,
+      ).success();
+    } else {
+      createResponse = new CreateResponse(updateBook.message).failed();
+    }
+
+    const response = h
+      .response(createResponse.payload)
+      .code(createResponse.code);
+
+    return response;
+  }
 }
 
 class BooksSchema {
-  static get baseSchema() {
+  static basePayloadSchema(state) {
     const properties = [
       {
         name: 'name',
@@ -113,23 +135,23 @@ class BooksSchema {
           .min(1)
           .required()
           .messages({
-            'string.base': `Gagal menambahkan buku. Isi ${curr.nameLabel} buku harus berupa huruf`,
-            'string.empty': `Gagal menambahkan buku. Mohon isi ${curr.nameLabel} buku`,
-            'any.required': `Gagal menambahkan buku. Properti ${curr.nameLabel} buku harus disertakan`,
+            'string.base': `Gagal ${state} buku. Isi ${curr.nameLabel} buku harus berupa huruf`,
+            'string.empty': `Gagal ${state} buku. Mohon isi ${curr.nameLabel} buku`,
+            'any.required': `Gagal ${state} buku. Properti ${curr.nameLabel} buku harus disertakan`,
           }),
         number: Joi.number()
           .integer()
-          .min(0)
+          .min(1)
           .required()
           .messages({
-            'number.base': `Gagal menambahkan buku. Isi ${curr.nameLabel} buku harus berupa angka`,
-            'any.required': `Gagal menambahkan buku. Properti ${curr.nameLabel} buku harus disertakan`,
+            'number.base': `Gagal ${state} buku. Isi ${curr.nameLabel} buku harus berupa angka`,
+            'any.required': `Gagal ${state} buku. Properti ${curr.nameLabel} buku harus disertakan`,
           }),
         boolean: Joi.boolean()
           .required()
           .messages({
-            'boolean.base': `Gagal menambahkan buku. Isi ${curr.nameLabel} buku harus berupa boolean`,
-            'any.required': `Gagal menambahkan buku. Properti ${curr.nameLabel} buku harus disertakan`,
+            'boolean.base': `Gagal ${state} buku. Isi ${curr.nameLabel} buku harus berupa boolean`,
+            'any.required': `Gagal ${state} buku. Properti ${curr.nameLabel} buku harus disertakan`,
           }),
       };
       return { ...acc, [curr.name]: validateTypes[curr.type] };
@@ -156,7 +178,19 @@ class BooksSchema {
   }
 
   static get create() {
-    return Joi.object(this.baseSchema);
+    return Joi.object(this.basePayloadSchema('menambahkan'));
+  }
+
+  static get update() {
+    return {
+      params: Joi.object({
+        bookId: Joi.string().min(1).optional().messages({
+          'string.base': `Gagal memperbarui buku. Isi params bookId harus berupa huruf`,
+          'string.empty': `Gagal memperbarui buku. Mohon isi params bookId`,
+        }),
+      }),
+      payload: Joi.object(this.basePayloadSchema('memperbarui')),
+    };
   }
 }
 
