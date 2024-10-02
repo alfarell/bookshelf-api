@@ -8,18 +8,18 @@ class CreateResponse {
     return {
       payload: {
         status: 'success',
-        message: this.message,
+        ...(this.message && { message: this.message }),
         data: this.data,
       },
       code: 200,
     };
   }
 
-  failed(message) {
+  failed() {
     return {
       payload: {
         status: 'fail',
-        message,
+        message: this.message,
       },
       code: 400,
     };
