@@ -1,6 +1,6 @@
-const Hapi = require("@hapi/hapi");
+const Hapi = require('@hapi/hapi');
 
-const host = process.env.NODE_ENV === "production" ? "0.0.0.0" : "localhost";
+const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
 const port = process.env.PORT || 3000;
 
 const init = async () => {
@@ -9,7 +9,7 @@ const init = async () => {
     port,
     routes: {
       cors: {
-        origin: ["*"],
+        origin: ['*'],
       },
     },
   });
