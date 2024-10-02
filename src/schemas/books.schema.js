@@ -50,13 +50,13 @@ class BooksSchema {
           .min(1)
           .required()
           .messages({
-            'string.base': `Gagal ${state} buku. Isi ${curr.nameLabel} buku harus berupa huruf`,
+            'string.base': `Gagal ${state} buku. Mohon isi ${curr.nameLabel} buku`,
             'string.empty': `Gagal ${state} buku. Mohon isi ${curr.nameLabel} buku`,
-            'any.required': `Gagal ${state} buku. Properti ${curr.nameLabel} buku harus disertakan`,
+            'any.required': `Gagal ${state} buku. Mohon isi ${curr.nameLabel} buku`,
           }),
         number: Joi.number()
           .integer()
-          .min(1)
+          .min(0)
           .required()
           .messages({
             'number.base': `Gagal ${state} buku. Isi ${curr.nameLabel} buku harus berupa angka`,
@@ -83,11 +83,11 @@ class BooksSchema {
           'string.base': `Gagal mendapatkan buku. Isi query nama buku harus berupa huruf`,
           'string.empty': `Gagal mendapatkan buku. Mohon isi nama buku`,
         }),
-        finished: Joi.number().integer().min(1).optional().messages({
+        finished: Joi.number().integer().min(0).optional().messages({
           'number.base': `Gagal mendapatkan buku. Isi query finished buku harus berupa angka 0 atau 1`,
           'number.empty': `Gagal mendapatkan buku. Mohon isi finished buku`,
         }),
-        reading: Joi.number().integer().min(1).optional().messages({
+        reading: Joi.number().integer().min(0).optional().messages({
           'number.base': `Gagal mendapatkan buku. Isi query reading buku harus berupa angka 0 atau 1`,
           'number.empty': `Gagal mendapatkan buku. Mohon isi reading buku`,
         }),
