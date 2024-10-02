@@ -18,6 +18,28 @@ class BooksController {
     return response;
   }
 
+  static showById(request, h) {
+    const { params } = request;
+
+    const getBook = booksService.getById(params.bookId);
+
+    let createResponse;
+    if (getBook.isSuccess) {
+      createResponse = new CreateResponse(
+        getBook.message,
+        getBook.data,
+      ).success();
+    } else {
+      createResponse = new CreateResponse(getBook.message).failed();
+    }
+
+    const response = h
+      .response(createResponse.payload)
+      .code(createResponse.code);
+
+    return response;
+  }
+
   static create(request, h) {
     const { payload } = request;
 

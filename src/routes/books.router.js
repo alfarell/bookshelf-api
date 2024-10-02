@@ -17,6 +17,11 @@ const booksRoute = [
     },
   },
   {
+    method: 'GET',
+    path: '/books/{bookId}',
+    handler: BooksController.showById,
+  },
+  {
     method: 'POST',
     path: '/books',
     handler: BooksController.create,

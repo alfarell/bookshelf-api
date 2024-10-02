@@ -32,6 +32,22 @@ class BooksService {
     };
   }
 
+  getById(bookId) {
+    const findBook = this.#books.find((item) => item.id === bookId);
+
+    if (!findBook) {
+      return {
+        isSuccess: false,
+        message: 'Buku tidak ditemukan',
+      };
+    }
+
+    return {
+      isSuccess: true,
+      data: findBook,
+    };
+  }
+
   create(payload) {
     const { readPage, pageCount } = payload;
 
